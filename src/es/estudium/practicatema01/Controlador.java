@@ -33,6 +33,7 @@ public class Controlador implements ActionListener, MouseListener {
             vista.modeloLista.addElement("C:\\Windows\\System32\\notepad.exe");
             vista.modeloLista.addElement("C:\\Windows\\System32\\mspaint.exe");
             vista.modeloLista.addElement("C:\\Users\\LeoRuiz\\Downloads\\Tema 1 - Programación Multiproceso - Práctica.pdf");
+            vista.modeloLista.addElement("C:\\Users\\LeoRuiz\\Downloads\\index(1).html");
 
             if (validarInputText(inputTxt)){
                 vista.modeloLista.addElement("Buscando en todo el disco... Esto puede tardar unos segundos, por favor espere.");
@@ -78,27 +79,26 @@ public class Controlador implements ActionListener, MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent evento) {
-        if(evento.getClickCount() == 2){
+        if(evento.getClickCount() == 2) {
             String ruta = vista.listResultados.getSelectedValue();
-            if(ruta != null && ruta.endsWith(".exe")){
+            File archivo = new File(ruta);
+            Desktop desktop = Desktop.getDesktop();
+            if (ruta.endsWith(".exe")) {
                 ProcessBuilder pb = new ProcessBuilder(ruta);
                 //TODO: ejecutar los archivos .exe
-                Desktop desktop = Desktop.getDesktop();
-                File archivo = new File(ruta);
-                if(archivo.exists()){
-                    try{
+                if (archivo.exists()) {
+                    try {
                         pb.start();
                     } catch (IOException e) {
                         System.out.println("Error a la hora de abrir archivo." + e.getMessage());
                         //TODO intento meter un pequeño dialog para que avise del error?
-
                     }
-            /*
-                    try {
-                        desktop.open(archivo);
-                    } catch (IOException e) {
-                        System.out.println("Error a la hora de abrir archivo." + e.getMessage());
-                    }*/
+                }
+            } else {
+                try {
+                    desktop.open(archivo);
+                } catch (IOException e) {
+                    System.out.println("Error a la hora de abrir archivo." + e.getMessage());
                 }
             }
         }
