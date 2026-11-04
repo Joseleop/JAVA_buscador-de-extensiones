@@ -1,5 +1,6 @@
 package es.estudium.practicatema01;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ public class Controlador implements ActionListener {
         this.modelo = modelo;
 
         this.vista.btnBuscar.addActionListener(this);
+        this.vista.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     @Override
@@ -20,9 +22,9 @@ public class Controlador implements ActionListener {
         String inputTxt = vista.txtField.getText().trim().toLowerCase();
 
         if (e.getSource() == vista.btnBuscar) {
-            vista.listResultados.setText("");
+            vista.modeloLista.clear();
             if (validarInputText(inputTxt)){
-                vista.listResultados.setText("Buscando en todo el disco... Esto puede tardar unos segundos, por favor espere.");
+                vista.modeloLista.addElement("Buscando en todo el disco... Esto puede tardar unos segundos, por favor espere.");
                 vista.lblBuscando.setVisible(true);
                 vista.lblBuscando.setText("Estado: Buscando...");
 
@@ -35,19 +37,19 @@ public class Controlador implements ActionListener {
                 }
                 ArrayList<String> ficheros = modelo.buscarEnDiscos(inputTxt);
                 if (ficheros.isEmpty()) {
-                    vista.listResultados.setText("No se encontró ningún archivo con esa extensión.");
+                    vista.modeloLista.addElement("No se encontró ningún archivo con esa extensión.");
                 }
                 else {
-                    vista.listResultados.setText("");
+                    vista.modeloLista.clear();
                     for (String fichero : ficheros){
-                    vista.listResultados.append(fichero+"\n");
+                        vista.modeloLista.addElement(fichero+"\n");
                 }
                     }
                 System.out.println(validarInputText(inputTxt));
                 vista.lblBuscando.setText("Búsqueda finalizada ("+ficheros.size()+" resultados encontrados)");
             }
             else {
-                vista.listResultados.setText("Introduce una extensión válida");
+                vista.modeloLista.addElement("Introduce una extensión válida");
             }
 
             vista.txtField.setText("");

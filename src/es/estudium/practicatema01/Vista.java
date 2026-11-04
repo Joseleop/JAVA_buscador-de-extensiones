@@ -8,8 +8,11 @@ public class Vista {
     JFrame frame = new JFrame("Mis ficheros");
     JPanel panelMain = new JPanel();
     JPanel panelTxtBtn = new JPanel();
-    JTextArea listResultados = new JTextArea();
+
+    DefaultListModel<String> modeloLista = new DefaultListModel<>();
+    JList<String> listResultados = new JList<>(modeloLista);
     JScrollPane scrollPane = new JScrollPane(listResultados);
+
     JLabel lblTxt = new JLabel("Introduce la extensión (ej: .java, .png):");
     JTextField txtField = new JTextField();
     JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
@@ -18,17 +21,12 @@ public class Vista {
 
     public Vista(){
 
-        //Esto tiene que ir en el controlador, auqneu de momento lo pongo aquí para testear cómo va quedando la vista
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(600, 700); // Tamaño mediano (600px de ancho)
         frame.setLocationRelativeTo(null);
 
         panelMain.setLayout(new BorderLayout(10, 10));
         panelMain.setBorder(new EmptyBorder(15, 15, 15, 15));
 
-        //txtArea.setLineWrap(true);
-        //txtArea.setWrapStyleWord(true);
-        //txtArea.setEditable(false);
         listResultados.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 
         txtField.setFont(new Font("Segoe UI", Font.PLAIN, 14));
