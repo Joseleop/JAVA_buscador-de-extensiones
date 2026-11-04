@@ -1,6 +1,5 @@
 package es.estudium.practicatema01;
 
-import javax.management.Descriptor;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -13,7 +12,7 @@ import java.util.ArrayList;
 
 public class Controlador implements ActionListener, MouseListener {
     private final Vista vista;
-    private Modelo modelo;
+    private final Modelo modelo;
 
     public Controlador(Vista vista, Modelo modelo) {
         this.vista = vista;
@@ -31,17 +30,8 @@ public class Controlador implements ActionListener, MouseListener {
         if (e.getSource() == vista.btnBuscar) {
             vista.modeloLista.clear();
             vista.modeloLista.addElement("C:\\Windows\\System32\\notepad.exe");
-            vista.modeloLista.addElement("C:\\Windows\\System32\\mspaint.exe");
-            vista.modeloLista.addElement("C:\\Users\\LeoRuiz\\Downloads\\Tema 1 - Programación Multiproceso - Práctica.pdf");
-            vista.modeloLista.addElement("C:\\Users\\LeoRuiz\\Downloads\\index(1).html");
-
             if (validarInputText(inputTxt)){
                 vista.modeloLista.addElement("Buscando en todo el disco... Esto puede tardar unos segundos, por favor espere.");
-                vista.lblBuscando.setVisible(true);
-                vista.lblBuscando.setText("Estado: Buscando...");
-
-                // Con esta línea se fuerza al programa a pintar lo que hay antes de seguir.
-                // Tengo que mirar si es buena praxis, es inseguro o podría haber otro modo
                 vista.listResultados.paintImmediately(vista.listResultados.getVisibleRect());
 
                 if (!inputTxt.startsWith(".")) {
@@ -49,21 +39,21 @@ public class Controlador implements ActionListener, MouseListener {
                 }
                 ArrayList<String> ficheros = modelo.buscarEnDiscos(inputTxt);
                 if (ficheros.isEmpty()) {
+                    vista.modeloLista.clear();
                     vista.modeloLista.addElement("No se encontró ningún archivo con esa extensión.");
                 }
                 else {
                     vista.modeloLista.clear();
                     for (String fichero : ficheros){
                         vista.modeloLista.addElement(fichero);
-                }
                     }
-                System.out.println(validarInputText(inputTxt));
+                }
+                vista.lblBuscando.setVisible(true);
                 vista.lblBuscando.setText("Búsqueda finalizada ("+ficheros.size()+" resultados encontrados)");
             }
             else {
                 vista.modeloLista.addElement("Introduce una extensión válida");
             }
-
             vista.txtField.setText("");
             vista.txtField.requestFocus();
         }
@@ -79,26 +69,19 @@ public class Controlador implements ActionListener, MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent evento) {
-        if(evento.getClickCount() == 2) {
-            String ruta = vista.listResultados.getSelectedValue();
+        if (evento.getClickCount() != 2) return;
+        String ruta = vista.listResultados.getSelectedValue();
+        if (ruta != null && ruta.toLowerCase().endsWith(".exe")) {
             File archivo = new File(ruta);
-            Desktop desktop = Desktop.getDesktop();
-            if (ruta.endsWith(".exe")) {
-                ProcessBuilder pb = new ProcessBuilder(ruta);
-                //TODO: ejecutar los archivos .exe
-                if (archivo.exists()) {
-                    try {
-                        pb.start();
-                    } catch (IOException e) {
-                        System.out.println("Error a la hora de abrir archivo." + e.getMessage());
-                        //TODO intento meter un pequeño dialog para que avise del error?
-                    }
-                }
-            } else {
+            if (archivo.isFile() && vista.confirmarEjecucion(archivo.getName())) {
                 try {
-                    desktop.open(archivo);
+                    ProcessBuilder pb = new ProcessBuilder(archivo.getAbsolutePath());
+                    Process process = pb.start();
+                    long pid = process.pid();
+                    System.out.println("Proceso: "+archivo.getName()+" (PID: "+pid+")");
                 } catch (IOException e) {
-                    System.out.println("Error a la hora de abrir archivo." + e.getMessage());
+                    vista.mostrarError("No se pudo ejecutar: " + archivo.getName());
+                    System.out.println("Error: no se ejecutó el archivo " +e.getMessage());
                 }
             }
         }

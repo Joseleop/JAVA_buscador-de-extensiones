@@ -12,11 +12,6 @@ public class Modelo {
         for (File disco : discos) {
             buscarFicheros(disco, extension, resultados);
         }
-        if(resultados.isEmpty()){
-            resultados.add("No se encuentra ningún archivo con la extensión "+ extension);
-            System.out.println("No se encuentra ningún archivo con la extensión "+ extension);
-        }
-
         return resultados;
     }
     private void buscarFicheros(File directorio, String extension, ArrayList<String> resultados) {
@@ -25,12 +20,9 @@ public class Modelo {
             for (File fichero : contenido) {
                 if (fichero.isFile() && fichero.getName().toLowerCase().endsWith(extension)){
                     resultados.add(fichero.getAbsolutePath());
-                    System.out.println("FICHERO: "+fichero.getAbsolutePath());
                 }
                 else if (fichero.isDirectory()) {
                     buscarFicheros(fichero, extension, resultados);
-
-                    System.out.println("DIRECTORIO: "+fichero.getAbsolutePath());
                 }
             }
         }

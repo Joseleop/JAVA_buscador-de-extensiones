@@ -21,7 +21,7 @@ public class Vista {
 
     public Vista(){
 
-        frame.setSize(600, 700); // Tamaño mediano (600px de ancho)
+        frame.setSize(600, 700);
         frame.setLocationRelativeTo(null);
 
         panelMain.setLayout(new BorderLayout(10, 10));
@@ -36,22 +36,16 @@ public class Vista {
 
         txtField.setPreferredSize(new Dimension(0, 35));
 
-        panelTxtBtn.setLayout(new BorderLayout(0, 15));
-        panelTxtBtn.add(lblTxt);
-        panelTxtBtn.add(txtField, BorderLayout.CENTER);
-        btnBuscar.setPreferredSize(new Dimension(130, 35)); // Más alto (32px) y más estrecho (130px)
-        panelTxtBtn.setLayout(new GridLayout(3, 1, 0, 5)); // 3 filas, espacio vertical de 8px
+        btnBuscar.setPreferredSize(new Dimension(130, 35));
+        panelTxtBtn.setLayout(new GridLayout(3, 1, 0, 5));
 
         panelTxtBtn.add(lblTxt);
         panelTxtBtn.add(txtField);
 
-        // Contenedor para el botón (para controlar su tamaño y centrado)
-        btnBuscar.setPreferredSize(new Dimension(130, 35)); // Ancho: 130px, Alto: 32px
         buttonPanel.add(btnBuscar);
 
         panelTxtBtn.add(buttonPanel);
 
-        // Ensamblar componentes principales en la ventana
         lblBuscando.setVisible(false);
         panelMain.add(lblBuscando, BorderLayout.NORTH);
         panelMain.add(scrollPane, BorderLayout.CENTER);
@@ -59,5 +53,14 @@ public class Vista {
 
         frame.add(panelMain);
         frame.setVisible(true);
+    }
+
+    public boolean confirmarEjecucion(String nombre){
+        int respuesta = JOptionPane.showConfirmDialog(frame, "El archivo "+nombre+" es un ejecutable. ¿Quieres iniciarlo?","Confirmar ejecución", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+        return respuesta == JOptionPane.YES_OPTION;
+    }
+
+    public void mostrarError(String mensaje) {
+        JOptionPane.showMessageDialog(frame, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
     }
 }
