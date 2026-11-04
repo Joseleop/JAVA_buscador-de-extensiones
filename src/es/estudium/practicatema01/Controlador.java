@@ -1,11 +1,17 @@
 package es.estudium.practicatema01;
 
+import javax.management.Descriptor;
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
-public class Controlador implements ActionListener {
+public class Controlador implements ActionListener, MouseListener {
     private final Vista vista;
     private Modelo modelo;
 
@@ -13,8 +19,9 @@ public class Controlador implements ActionListener {
         this.vista = vista;
         this.modelo = modelo;
 
-        this.vista.btnBuscar.addActionListener(this);
         this.vista.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.vista.btnBuscar.addActionListener(this);
+        this.vista.listResultados.addMouseListener(this);
     }
 
     @Override
@@ -23,6 +30,10 @@ public class Controlador implements ActionListener {
 
         if (e.getSource() == vista.btnBuscar) {
             vista.modeloLista.clear();
+            vista.modeloLista.addElement("C:\\Windows\\System32\\notepad.exe");
+            vista.modeloLista.addElement("C:\\Windows\\System32\\mspaint.exe");
+            vista.modeloLista.addElement("C:\\Users\\LeoRuiz\\Downloads\\Tema 1 - Programación Multiproceso - Práctica.pdf");
+
             if (validarInputText(inputTxt)){
                 vista.modeloLista.addElement("Buscando en todo el disco... Esto puede tardar unos segundos, por favor espere.");
                 vista.lblBuscando.setVisible(true);
@@ -42,7 +53,7 @@ public class Controlador implements ActionListener {
                 else {
                     vista.modeloLista.clear();
                     for (String fichero : ficheros){
-                        vista.modeloLista.addElement(fichero+"\n");
+                        vista.modeloLista.addElement(fichero);
                 }
                     }
                 System.out.println(validarInputText(inputTxt));
@@ -64,5 +75,45 @@ public class Controlador implements ActionListener {
         }
         return true;
     }
+
+    @Override
+    public void mouseClicked(MouseEvent evento) {
+        if(evento.getClickCount() == 2){
+            String ruta = vista.listResultados.getSelectedValue();
+            if(ruta != null && ruta.endsWith(".exe")){
+                ProcessBuilder pb = new ProcessBuilder(ruta);
+                //TODO: ejecutar los archivos .exe
+                Desktop desktop = Desktop.getDesktop();
+                File archivo = new File(ruta);
+                if(archivo.exists()){
+                    try{
+                        pb.start();
+                    } catch (IOException e) {
+                        System.out.println("Error a la hora de abrir archivo." + e.getMessage());
+                        //TODO intento meter un pequeño dialog para que avise del error?
+
+                    }
+            /*
+                    try {
+                        desktop.open(archivo);
+                    } catch (IOException e) {
+                        System.out.println("Error a la hora de abrir archivo." + e.getMessage());
+                    }*/
+                }
+            }
+        }
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {}
+
+    @Override
+    public void mouseReleased(MouseEvent e) {}
+
+    @Override
+    public void mouseEntered(MouseEvent e) {}
+
+    @Override
+    public void mouseExited(MouseEvent e) {}
 }
 
