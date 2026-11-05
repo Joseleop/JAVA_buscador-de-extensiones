@@ -18,9 +18,11 @@ public class Controlador implements ActionListener, MouseListener {
         this.vista = vista;
         this.modelo = modelo;
 
-        this.vista.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.vista.btnBuscar.addActionListener(this);
         this.vista.listResultados.addMouseListener(this);
+
+        this.vista.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.vista.frame.getRootPane().setDefaultButton(this.vista.btnBuscar);
     }
 
     @Override
@@ -29,10 +31,10 @@ public class Controlador implements ActionListener, MouseListener {
 
         if (e.getSource() == vista.btnBuscar) {
             vista.modeloLista.clear();
-            vista.modeloLista.addElement("C:\\Windows\\System32\\notepad.exe");
             if (validarInputText(inputTxt)){
+                vista.lblBuscando.setText(" ");
                 vista.modeloLista.addElement("Buscando en todo el disco... Esto puede tardar unos segundos, por favor espere.");
-                vista.listResultados.paintImmediately(vista.listResultados.getVisibleRect());
+                vista.panelMain.paintImmediately(vista.panelMain.getVisibleRect());
 
                 if (!inputTxt.startsWith(".")) {
                     inputTxt = "." + inputTxt;
@@ -48,8 +50,9 @@ public class Controlador implements ActionListener, MouseListener {
                         vista.modeloLista.addElement(fichero);
                     }
                 }
-                vista.lblBuscando.setVisible(true);
                 vista.lblBuscando.setText("Búsqueda finalizada ("+ficheros.size()+" resultados encontrados)");
+                vista.lblTxt.setForeground(Color.black);
+                vista.lblTxt.setFont(new Font("Segoe UI", Font.PLAIN, 12));
             }
             else {
                 vista.modeloLista.addElement("Introduce una extensión válida");
@@ -62,6 +65,9 @@ public class Controlador implements ActionListener, MouseListener {
         String patron = "^\\.?[a-zA-Z0-9]+$";
 
         if (texto.isBlank() || !texto.matches(patron)) {
+            vista.lblBuscando.setText(" ");
+            vista.lblTxt.setForeground(Color.red);
+            vista.lblTxt.setFont(new Font("Segoe UI", Font.BOLD,12));
             return false;
         }
         return true;

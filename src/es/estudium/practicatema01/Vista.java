@@ -8,51 +8,51 @@ public class Vista {
     JFrame frame = new JFrame("Mis ficheros");
     JPanel panelMain = new JPanel();
     JPanel panelTxtBtn = new JPanel();
+    JPanel panelButton = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
 
     DefaultListModel<String> modeloLista = new DefaultListModel<>();
     JList<String> listResultados = new JList<>(modeloLista);
     JScrollPane scrollPane = new JScrollPane(listResultados);
 
+    JLabel lblBuscando = new JLabel(" ");
     JLabel lblTxt = new JLabel("Introduce la extensión (ej: .java, .png):");
     JTextField txtField = new JTextField();
-    JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
     JButton btnBuscar = new JButton("Buscar");
-    JLabel lblBuscando = new JLabel("Por favor, espere. Buscando...");
 
     public Vista(){
 
         frame.setSize(600, 700);
         frame.setLocationRelativeTo(null);
 
-        panelMain.setLayout(new BorderLayout(10, 10));
-        panelMain.setBorder(new EmptyBorder(15, 15, 15, 15));
-
         listResultados.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-
         txtField.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         btnBuscar.setFont(new Font("Segoe UI", Font.BOLD, 14));
         lblTxt.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        lblBuscando.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        lblBuscando.setFont(new Font("Segoe UI", Font.BOLD, 11));
 
         txtField.setPreferredSize(new Dimension(0, 35));
-
         btnBuscar.setPreferredSize(new Dimension(130, 35));
-        panelTxtBtn.setLayout(new GridLayout(3, 1, 0, 5));
+        lblBuscando.setPreferredSize(new Dimension(0, 15));
 
+        panelTxtBtn.setBorder(new EmptyBorder(5, 0, 0, 0));
+        panelTxtBtn.setLayout(new GridLayout(3, 1, 0, 5));
+        panelMain.setLayout(new BorderLayout(10, 5));
+        panelMain.setBorder(new EmptyBorder(8, 15, 15, 15));
+
+        panelButton.add(btnBuscar);
         panelTxtBtn.add(lblTxt);
         panelTxtBtn.add(txtField);
+        panelTxtBtn.add(panelButton);
 
-        buttonPanel.add(btnBuscar);
-
-        panelTxtBtn.add(buttonPanel);
-
-        lblBuscando.setVisible(false);
         panelMain.add(lblBuscando, BorderLayout.NORTH);
         panelMain.add(scrollPane, BorderLayout.CENTER);
         panelMain.add(panelTxtBtn, BorderLayout.SOUTH);
 
         frame.add(panelMain);
+
         frame.setVisible(true);
+
+        txtField.requestFocusInWindow();
     }
 
     public boolean confirmarEjecucion(String nombre){
